@@ -1,0 +1,75 @@
+.ob-window {
+    width: 100%;
+    background-color: #1B1B1B;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.orderbook-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.ob-header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.side-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.side-title {
+    width: 50%;
+    justify-content: center;
+    display: flex;
+}
+
+.col-titles {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.col-title {
+    width: 11.11%;
+    display: flex;
+    justify-content: center;
+}
+
+.ob-grid {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.grid-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid #666666;
+    padding-top: 0.1rem;
+}
+
+.grid-item {
+    width: 11.11%;
+    display: flex;
+    justify-content: right;
+    padding-right: 1.7rem;
+}
+
+.strike {
+    justify-content: right;
+}
+
+.ask-price {
+    color: #F53661;
+}
+
+.bid-price {
+    color: #07B66E;
+}
