@@ -52,15 +52,15 @@ def start_funding_candle_thread(shared_state, shutdown_event, funding_historical
 if __name__ == "__main__":
     shutdown_event = asyncio.Event()
 
-    #candle_historical_data_done_event = asyncio.Event()
-    #css = CandleSharedState(candle_historical_data_done_event)
-    #candle_thread = start_candle_thread(css, shutdown_event, candle_historical_data_done_event, socketio)
-    #update_db_loop = start_candle_update_loop(css)
+    candle_historical_data_done_event = asyncio.Event()
+    css = CandleSharedState(candle_historical_data_done_event)
+    candle_thread = start_candle_thread(css, shutdown_event, candle_historical_data_done_event, socketio)
+    update_db_loop = start_candle_update_loop(css)
 
-    funding_historical_data_done_event = asyncio.Event()
-    fss = FundingSharedState(funding_historical_data_done_event)
-    funding_thread = start_funding_candle_thread(fss, shutdown_event, funding_historical_data_done_event, socketio)
-    update_db_loop = start_funding_update_loop(fss)
+    #funding_historical_data_done_event = asyncio.Event()
+    #fss = FundingSharedState(funding_historical_data_done_event)
+    #funding_thread = start_funding_candle_thread(fss, shutdown_event, funding_historical_data_done_event, socketio)
+    #update_db_loop = start_funding_update_loop(fss)
     #fe_thread = start_fe_streamer(ss, shutdown_event)
 
     try:
@@ -71,6 +71,6 @@ if __name__ == "__main__":
         print('Shutting down')
         shutdown_event.set()
 
-        #candle_thread.join()
-        funding_thread.join()
+        candle_thread.join()
+        #funding_thread.join()
         print("All worker threads have terminated. Shutdown complete.")

@@ -41,14 +41,14 @@ class HLCandleInfo:
                 'intervals': self.intervals,
                 'subscribe_msgs': {asset: self.subscribe_msgs[asset] for asset in self.instruments[:90]},
                 'unsubscribe_msgs': self.unsubscribe_msgs[:(90*11)],
-                'proxy': 'socks5://qfapwzrc:f3f5ahrsce1k@198.23.239.134:6540'
+                'proxy': 'socks5://djyahvur:t45bdlc105gi@198.23.239.134:6540'
             },
             {
                 'instruments': self.instruments[90:],
                 'intervals': self.intervals,
                 'subscribe_msgs': {asset: self.subscribe_msgs[asset] for asset in self.instruments[90:]},
                 'unsubscribe_msgs': self.unsubscribe_msgs[(90*11):],
-                'proxy': 'socks5://qfapwzrc:f3f5ahrsce1k@207.244.217.165:6712'
+                'proxy': 'socks5://djyahvur:t45bdlc105gi@207.244.217.165:6712'
             }
         ]
 

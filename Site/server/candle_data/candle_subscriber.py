@@ -1,5 +1,5 @@
 import asyncio
-import json, time
+import json, time, ssl
 import pandas as pd
 import threading
 from typing import List, Dict, Any
@@ -38,7 +38,10 @@ class CandleSubscriber:
         self.unsubscribe_msgs = unsubscribe_msgs
         
     async def connect(self):
-        connector = ProxyConnector.from_url(self.proxy) if self.proxy else None
+        ssl_context = ssl.create_default_context()
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+        connector = ProxyConnector.from_url(self.proxy, ssl=ssl_context) if self.proxy else None
         async with ClientSession(connector=connector) as session:
             try:
                 self.connection = await session.ws_connect(self.url, heartbeat=self.ping_interval)

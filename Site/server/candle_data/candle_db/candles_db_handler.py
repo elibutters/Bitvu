@@ -18,7 +18,7 @@ def start(exchanges, historical_data_done_event):
 
             all_coins = ['AAVE']
             start_date = int(datetime.strptime('2020-01-01', '%Y-%m-%d').timestamp() * 1_000)
-            end_date = int(datetime.strptime('2025-01-30', '%Y-%m-%d').timestamp() * 1_000)
+            end_date = int(datetime.strptime('2040-01-30', '%Y-%m-%d').timestamp() * 1_000)
             intervals = ['1m', '5m', '15m', '30m', '1h', '2h', '4h', '8h', '12h', '1d', '1w']
             #intervals = ['1m', '5m']
         
@@ -133,6 +133,11 @@ def insert_exchange(conn, exchange_name):
 def create_tables(conn):
     cursor = conn.cursor()
     cursor.execute('PRAGMA foreign_keys = ON;')
+
+    cursor.execute('DROP TABLE IF EXISTS candles;')
+    cursor.execute('DROP TABLE IF EXISTS intervals;')
+    cursor.execute('DROP TABLE IF EXISTS coins;')
+    cursor.execute('DROP TABLE IF EXISTS exchanges;')
     
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS exchanges (

@@ -1,4 +1,4 @@
-from server.funding_data.helpers.hyperliquid.hl_funding_helper import HLFundingInfo
+from funding_data.helpers.hyperliquid.hl_funding_helper import HLFundingInfo
 from funding_data.funding_subscriber import FundingSubscriber
 from funding_data.funding_db import funding_db_handler
 import asyncio
