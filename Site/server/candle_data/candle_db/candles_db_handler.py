@@ -35,7 +35,7 @@ def start(exchanges, historical_data_done_event):
                         print(f"Failed to retrieve interval_id for {interval}. Skipping.")
                         continue
 
-                    print(f'Getting {coin_symbol} on {interval}')
+                    print(f'Getting Candles {coin_symbol} on {interval}')
                     try:
                         response = info.candles_snapshot(
                             name=coin_symbol, 

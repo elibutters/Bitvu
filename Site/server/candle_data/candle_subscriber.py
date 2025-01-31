@@ -36,6 +36,7 @@ class CandleSubscriber:
         self.confirmed_subs = 0
         self.proxy = proxy
         self.unsubscribe_msgs = unsubscribe_msgs
+        self.shown_confirmed = False
         
     async def connect(self):
         ssl_context = ssl.create_default_context()
@@ -109,7 +110,9 @@ class CandleSubscriber:
 
     async def _emit_loop(self):
         while self.running and not self.shutdown_event.is_set():
-            #print(f'total confirmed conns: {self.confirmed_subs} | Should be: {len(self.instruments) * len(self.intervals)}')
+            if self.confirmed_subs == (len(self.instruments) * len(self.intervals)) and not self.shown_confirmed:
+                print(f'total confirmed conns: {self.confirmed_subs} | Should be: {len(self.instruments) * len(self.intervals)}')
+                self.shown_confirmed = True
             self.candles = self.shared_state.sync_local_candles(self.candles, self.instruments,'Hyperliquid')
             await asyncio.sleep(0.25)
 

@@ -1,5 +1,5 @@
 import asyncio
-import json, time
+import json, time, ssl
 import pandas as pd
 import threading
 from typing import List, Dict, Any
@@ -34,9 +34,13 @@ class FundingSubscriber:
         self.confirmed_subs = 0
         self.proxy = proxy
         self.unsubscribe_msgs = unsubscribe_msgs
+        self.shown_confirmed = False
         
     async def connect(self):
-        connector = ProxyConnector.from_url(self.proxy) if self.proxy else None
+        ssl_context = ssl.create_default_context()
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+        connector = ProxyConnector.from_url(self.proxy, ssl=ssl_context) if self.proxy else None
         async with ClientSession(connector=connector) as session:
             try:
                 self.connection = await session.ws_connect(self.url, heartbeat=self.ping_interval)
@@ -44,7 +48,7 @@ class FundingSubscriber:
 
                 for instrument in self.instruments:
                     if instrument not in self.candles:
-                        self.candles[instrument] = []
+                        self.candles[instrument] = {}
                     
                     sub_msg = self.subscribe_msgs[instrument]
                     await self._send_json(sub_msg)
@@ -101,7 +105,9 @@ class FundingSubscriber:
 
     async def _emit_loop(self):
         while self.running and not self.shutdown_event.is_set():
-            print(f'total confirmed conns: {self.confirmed_subs} | Should be: {len(self.instruments)}')
+            if self.confirmed_subs == len(self.instruments) and not self.shown_confirmed:
+                print(f'total confirmed conns: {self.confirmed_subs} | Should be: {len(self.instruments)}')
+                self.shown_confirmed = True
             self.candles = self.shared_state.sync_local_funding_candles(self.candles, self.instruments,'Hyperliquid')
             await asyncio.sleep(0.25)
 

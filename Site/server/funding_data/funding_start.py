@@ -2,22 +2,39 @@ from funding_data.helpers.hyperliquid.hl_funding_helper import HLFundingInfo
 from funding_data.funding_subscriber import FundingSubscriber
 from funding_data.funding_db import funding_db_handler
 import asyncio
+from threading import Event as ThreadEvent
 
-def start(shared_state, shutdown_event, funding_historical_data_done_event, socket):
-    asyncio.run(main(shared_state, shutdown_event, funding_historical_data_done_event, socket))
+async def check_shutdown(shutdown_thread_event: ThreadEvent, shutdown_asyncio_event: asyncio.Event):
+    """Bridge threading.Event to asyncio.Event"""
+    while not shutdown_thread_event.is_set():
+        await asyncio.sleep(0.1)
+    shutdown_asyncio_event.set()
 
-async def main(shared_state, shutdown_event, funding_historical_data_done_event, socket):
-    exchanges = [HLFundingInfo(socket)]
-    ws_tasks = [
-        asyncio.create_task(start_ws(exchange, shared_state, shutdown_event))
-        for exchange in exchanges
-    ]
+def start(shared_state, shutdown_thread_event, funding_historical_data_done_event, socket):
+    shutdown_asyncio_event = asyncio.Event()
+    funding_historical_data_asyncio_event = asyncio.Event()
 
-    await asyncio.sleep(15)
+    async def main():
+        asyncio.create_task(check_shutdown(shutdown_thread_event, shutdown_asyncio_event))
 
-    db_task = asyncio.create_task(start_db(exchanges, funding_historical_data_done_event))
+        async def check_historical_data():
+            while not funding_historical_data_done_event.is_set():
+                await asyncio.sleep(0.1)
+            funding_historical_data_asyncio_event.set()
+        asyncio.create_task(check_historical_data())
 
-    await asyncio.gather(*ws_tasks, db_task)
+        exchanges = [HLFundingInfo(socket)]
+        ws_tasks = [
+            asyncio.create_task(start_ws(exchange, shared_state, shutdown_asyncio_event))
+            for exchange in exchanges
+        ]
+
+        await asyncio.sleep(15)
+
+        db_task = asyncio.create_task(start_db(exchanges, funding_historical_data_done_event))
+
+        await asyncio.gather(*ws_tasks, db_task)
+    asyncio.run(main())
 
 async def start_db(exchanges, funding_historical_data_done_event):
     loop = asyncio.get_running_loop()

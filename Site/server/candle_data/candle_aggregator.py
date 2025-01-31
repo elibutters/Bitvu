@@ -57,6 +57,6 @@ def update_db(local_candles):
         if data_to_insert:
             #print(data_to_insert['Hyperliquid']['AAVE']['1m'][-10:])
             inserted_count = insert_candles_from_dict(conn, data_to_insert)
-            print(f"Updated database with {inserted_count} new candles")
+            print(f"Updated candle database with {inserted_count} new candles")
             return inserted_count
         return 0

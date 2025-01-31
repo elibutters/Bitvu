@@ -1,10 +1,11 @@
 import PerpChart from "@/components/ChartTypes/PerpChart";
+import FundingChart from "@/components/ChartTypes/FundingChart";
 
 export const PerpsDashboard = {
     layouts: {
         lg: [
           { i: 'chart-1', x: 0, y: 0, w: 8, h: 4, isBounded: true, minW: 3, name: 'Chart', chartType: PerpChart, isHC: false},
-          { i: 'chart-2', x: 8, y: 0, w: 4, h: 4, isBounded: true, minW: 3, name: 'Order Book', chartType: PerpChart, isHC: true},
+          { i: 'chart-2', x: 8, y: 0, w: 4, h: 4, isBounded: true, minW: 3, name: 'Funding', chartType: FundingChart, isHC: true},
           { i: 'chart-3', x: 0, y: 2, w: 6, h: 3, isBounded: true, minW: 3, name: "Footprint Volatilty Curves", chartType: PerpChart, isHC: true},
           { i: 'chart-4', x: 6, y: 2, w: 6, h: 3, isBounded: true, minW: 3, name: "ATM Active Maturities", chartType: PerpChart, isHC: true},
           { i: 'chart-5', x: 0, y: 4, w: 6, h: 3, isBounded: true, minW: 3, name: "Shadow Skew Delta", chartType: PerpChart, isHC: true},
